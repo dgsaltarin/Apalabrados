@@ -6,14 +6,15 @@ import com.dgsaltarin.apalabrados.models.Text;
 import com.dgsaltarin.apalabrados.repository.CharacterRepository;
 import com.dgsaltarin.apalabrados.repository.NumberRepository;
 import com.dgsaltarin.apalabrados.repository.TextRepository;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
 public class InputService {
 
-    private TextRepository textRepository;
-    private NumberRepository numberRepository;
-    private CharacterRepository characterRepository;
+    private final TextRepository textRepository;
+    private final NumberRepository numberRepository;
+    private final CharacterRepository characterRepository;
 
     public InputService(TextRepository textRepository, NumberRepository numberRepository,
                         CharacterRepository characterRepository) {
@@ -25,9 +26,15 @@ public class InputService {
     public String evaluateInput(String input) {
         String message = "";
         if (input.matches("^[0-9]+$") && input.length() >= 1) {
-            Number number = new Number(Long.valueOf(input), Long.valueOf(input));
-            Number higherAccumulated = this.numberRepository.findAllByAccumulatedOrderByAccumulatedAsc().get(0);
-            System.out.println(higherAccumulated);
+            long value = Long.parseLong(input);
+            Number number = new Number(value, value);
+            long higherAccumulated;
+            try {
+                higherAccumulated = this.numberRepository.findAll(Sort.by(Sort.Direction.DESC, "accumulated")).get(0).getAccumulated();
+            } catch (IndexOutOfBoundsException e) {
+                higherAccumulated = 0L;
+            }
+            number.setAccumulated(number.getAccumulated() + higherAccumulated);
             this.storeNumber(number);
             message = "input saved in number";
         }
