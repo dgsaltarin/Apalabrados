@@ -1,5 +1,8 @@
 package com.dgsaltarin.apalabrados.models;
 
+import lombok.Data;
+
+@Data
 public class Text {
 
     private String text;
