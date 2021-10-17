@@ -32,12 +32,13 @@ public class InputService {
             message = "input saved in number";
         }
         if (input.matches("^[a-zA-Z]+$") && input.length() >= 1) {
-            Text testText = new Text(input, input.charAt(0), input.charAt(input.length()));
+            Text testText = new Text(input, input.charAt(0), input.charAt(input.length()-1));
             this.storeText(testText);
             message = "input saved in text";
         }
         if (!input.matches("^[a-zA-Z0-9]+$") && input.length() >= 1) {
-            Character character = new Character(input.charAt(0));
+            String specialCharacters = input.replaceAll("[\\d\\w]", "");
+            Character character = new Character(specialCharacters);
             this.storeCharacter(character);
             message = "input saved in character";
         }

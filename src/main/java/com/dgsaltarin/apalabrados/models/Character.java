@@ -2,9 +2,9 @@ package com.dgsaltarin.apalabrados.models;
 
 public class Character {
 
-    private char character;
+    private String character;
 
-    public Character(char character) {
+    public Character(String character) {
         this.character = character;
     }
 }
